@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
-import { Flex, Text } from '@chakra-ui/layout';
+import { Text } from '@chakra-ui/layout';
 import { Box, Stack, useClipboard } from '@chakra-ui/react';
 import { Fade } from '@chakra-ui/transition';
 import firebase from 'firebase/app';
@@ -62,7 +62,13 @@ const AddWords = () => {
   return (
     <Fade in={!loading}>
       <form style={{ width: '100%' }} onSubmit={handleSubmit}>
-        <Flex px={5} w='100%' align='center' justify='center'>
+        <Stack
+          px={5}
+          w='100%'
+          align='center'
+          justify='center'
+          direction='column'
+        >
           <Input
             mr={3}
             w='20%'
@@ -72,10 +78,10 @@ const AddWords = () => {
             onChange={(e) => setWord(e.target.value)}
             ref={inputRef}
           />
-          <Button disabled={!isValidWord} px={5} type='submit'>
+          <Button disabled={!isValidWord} px={10} type='submit'>
             Add
           </Button>
-        </Flex>
+        </Stack>
       </form>
       <Box mt={5}>
         {data.length < 4 ? (
@@ -85,10 +91,16 @@ const AddWords = () => {
         )}
       </Box>
       <Text fontSize='sm'>
-        <strong>Your words: </strong>
-        {usersWords.join(', ')}
+        {usersWords.length > 0 ? (
+          <>
+            <strong>Your words: </strong>
+            {usersWords.join(', ')}
+          </>
+        ) : (
+          "You haven't added any words yet"
+        )}
       </Text>
-      {!shouldShowAll && (
+      {shouldShowAll && (
         <Text fontSize='sm'>
           {data.length > 0 ? (
             <>
@@ -102,14 +114,18 @@ const AddWords = () => {
       )}
 
       <Stack mt={10} align='center' justify='center' isInline>
-        <Button onClick={onCopy}>
+        <Button disabled={data.length < 4} onClick={onCopy}>
           {hasCopied ? 'Copied Words' : 'Copy Words'}
         </Button>
         <Button onClick={() => setShouldShowAll(!shouldShowAll)}>
           {shouldShowAll ? 'Hide' : 'Show'} all words
         </Button>
-        <Button onClick={removeUsersWords}>Remove your words</Button>
-        <Button onClick={handleDeleteAll}>Remove all words</Button>
+        <Button disabled={usersWords.length === 0} onClick={removeUsersWords}>
+          Remove your words
+        </Button>
+        <Button disabled={data.length === 0} onClick={handleDeleteAll}>
+          Remove all words
+        </Button>
       </Stack>
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </Fade>

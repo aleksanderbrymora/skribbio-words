@@ -22,7 +22,7 @@ export const useGame = (id: string): [boolean, null | Error, any[]] => {
         }
       });
     return unsubscribe;
-  });
+  }, [id]);
 
   return [isLoading, error, data];
 };

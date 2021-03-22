@@ -2,6 +2,7 @@ import { Button, Input } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { skribblioID } from '../utils/skribblio';
+import { firestore } from '../firebase/config';
 
 const InputLink = () => {
   const [link, setLink] = useState('');
@@ -19,6 +20,14 @@ const InputLink = () => {
     }
   }, [link]);
 
+  const handleNewRoom = async () => {
+    await firestore
+      .collection('games')
+      .doc(SID)
+      .set({ words: [] }, { merge: true });
+    history.push(`/${SID}`);
+  };
+
   return (
     <>
       <pre>https://skribbl.io/?u44qMeq85gl2=</pre>
@@ -29,12 +38,7 @@ const InputLink = () => {
         w={'50%'}
         autoFocus
       />
-      <Button
-        onClick={() => {
-          history.push(`/${SID}`);
-        }}
-        disabled={!linkIsValid}
-      >
+      <Button onClick={handleNewRoom} disabled={!linkIsValid}>
         {redirectButton}
       </Button>
     </>

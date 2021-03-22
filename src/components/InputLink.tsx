@@ -30,7 +30,6 @@ const InputLink = () => {
 
   return (
     <>
-      <pre>https://skribbl.io/?u44qMeq85gl2=</pre>
       <Input
         placeholder={'Enter room link to start adding words'}
         value={link}

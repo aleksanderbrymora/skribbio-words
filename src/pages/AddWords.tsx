@@ -24,7 +24,7 @@ const AddWords = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    let valid = word.trim().length >= 4;
+    let valid = word.trim().length > 0;
     if (valid) valid = word.trim().length <= 30;
     setIsValidWord(valid);
   }, [word]);

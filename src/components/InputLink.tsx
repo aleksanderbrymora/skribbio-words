@@ -1,46 +1,31 @@
-import { Button, Input } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { Button, Input, Stack } from '@chakra-ui/react';
+import React, { FormEvent, useState } from 'react';
 import { useHistory } from 'react-router';
-import { skribblioID } from '../utils/skribblio';
-import { firestore } from '../firebase/config';
 
 const InputLink = () => {
-  const [link, setLink] = useState('');
-  const [linkIsValid, setLinkIsValid] = useState(false);
-  const [redirectButton, setRedirectButton] = useState('Input proper link');
-  const [SID, setSID] = useState('');
+  const [id, setId] = useState('');
   const history = useHistory();
 
-  useEffect(() => {
-    const { isValid, id } = skribblioID(link);
-    setLinkIsValid(isValid);
-    if (isValid) {
-      setSID(id);
-      setRedirectButton(`Go to room ${id}`);
-    }
-  }, [link]);
-
-  const handleNewRoom = async () => {
-    await firestore
-      .collection('games')
-      .doc(SID)
-      .set({ words: [] }, { merge: true });
-    history.push(`/${SID}`);
+  const handleNewRoom = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/${id}`);
   };
 
   return (
-    <>
-      <Input
-        placeholder={'Enter room link to start adding words'}
-        value={link}
-        onChange={(e) => setLink(e.target.value)}
-        w={'50%'}
-        autoFocus
-      />
-      <Button onClick={handleNewRoom} disabled={!linkIsValid}>
-        {redirectButton}
-      </Button>
-    </>
+    <form onSubmit={handleNewRoom}>
+      <Stack>
+        <Input
+          placeholder='Enter a name of the room you want to join or create (can be a link to skribblio)'
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          w={'full'}
+          autoFocus
+        />
+        <Button type='submit' disabled={id === ''}>
+          {id === '' ? 'Input a name of the room' : `Go to ${id}`}
+        </Button>
+      </Stack>
+    </form>
   );
 };
 

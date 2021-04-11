@@ -15,7 +15,7 @@ export const App = () => (
             <Route exact path='/'>
               <Home />
             </Route>
-            <Route path='/:id'>
+            <Route path='/:roomId'>
               <AddWords />
             </Route>
           </Switch>

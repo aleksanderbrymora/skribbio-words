@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import useWebSocket from 'react-use-websocket';
 import { serverLink } from '../constants/serverLink';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 
 export interface WsData {
   event:
@@ -16,8 +16,7 @@ export interface WsData {
 export const useSkribblio = (roomId: string) => {
   const [users, setUsers] = useState<string[]>([]);
   const [words, setWords] = useState<string[]>([]);
-  const [userId, setUserId] = useState(nanoid());
-  // const userId = nanoid();
+  const [userId] = useState(nanoid());
   const {
     sendJsonMessage,
     lastJsonMessage,
@@ -28,7 +27,6 @@ export const useSkribblio = (roomId: string) => {
   // updates state on every message
   useEffect(() => {
     if (lastJsonMessage === null) return;
-    console.log(lastJsonMessage);
     const { words, users } = lastJsonMessage as {
       words: string[];
       users: string[];
@@ -43,7 +41,7 @@ export const useSkribblio = (roomId: string) => {
       event: 'join-room',
       content: { userId, roomId },
     });
-  }, [userId, roomId]);
+  }, [userId, roomId, sendJsonMessage]);
 
   const deleteAllWords = () => {
     sendJsonMessage({

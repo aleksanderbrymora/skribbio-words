@@ -3,21 +3,14 @@ import { Input } from '@chakra-ui/input';
 import { Text } from '@chakra-ui/layout';
 import { Box, Stack, Tooltip, useClipboard } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
+import { useBeforeunload } from 'react-beforeunload';
 import { useParams } from 'react-router';
 import simplur from 'simplur';
 import { useSkribblio } from '../hooks/useSkribblio';
-import { useBeforeunload } from 'react-beforeunload';
 
 const AddWords = () => {
   const { roomId } = useParams<{ roomId: string }>();
-  const {
-    words,
-    deleteAllWords,
-    addWord,
-    leaveRoom,
-    removeWord,
-    state,
-  } = useSkribblio(roomId);
+  const { words, deleteAllWords, addWord, leaveRoom } = useSkribblio(roomId);
   const [word, setWord] = useState('');
   const [isValidWord, setIsValidWord] = useState(false);
   const [validMessage, setValidMessage] = useState('');
@@ -41,10 +34,11 @@ const AddWords = () => {
       setIsValidWord(true);
       setValidMessage('');
     }
-  }, [word]);
+  }, [word, words]);
 
   useEffect(() => {
     return leaveRoom;
+    // eslint-disable-next-line
   }, []);
 
   useBeforeunload(leaveRoom);
